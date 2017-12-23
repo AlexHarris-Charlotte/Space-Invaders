@@ -23,7 +23,7 @@ var playerY = canvasHeight - 60;
 var playerHeight = 40;
 var projectileWidth = 10;
 var projectileHeight = 20;
-var projectileX;
+var projectileX = playerX + ((playerWidth/2) - projectileWidth/2);
 var projectileY = playerY - 21;
 var rightPressed = false;
 var leftPressed = false;
@@ -97,14 +97,14 @@ function playerMovement() {
 // Projectile functions
 function drawProjectile() {
     ctx.beginPath();
-    ctx.rect(playerX + ((playerWidth/2) - projectileWidth/2), projectileY, projectileWidth, projectileHeight);
+    ctx.rect(projectileX, projectileY, projectileWidth, projectileHeight);
     ctx.fillStyle = "purple";
     ctx.fill();
     ctx.closePath();
 }
 
 function moveProjectile() {
-    projectileY--;
+    projectileY -= 5;
     console.log(projectileY, playerY);
 }
 
@@ -112,6 +112,7 @@ function fireProjectile() {
     if(fPressed) {
         projectileActive = true;
         projectileY = playerY - 21;
+        projectileX = playerX + ((playerWidth/2) - projectileWidth/2);
     }
     if(projectileActive){
         drawProjectile();
