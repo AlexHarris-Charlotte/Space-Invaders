@@ -1,0 +1,9 @@
+canvas {
+    background-color: gray;
+    margin: 40px auto;
+    display: block;
+}
+
+.container {
+    max-width: 100%;
+}
