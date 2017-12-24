@@ -21,9 +21,10 @@ var playerWidth = 40;
 var playerCenter = playerX + (playerWidth/2);
 var playerY = canvasHeight - 60;
 var playerHeight = 40;
-var projectileWidth = 10;
 var projectileHeight = 20;
+var projectileWidth = 10;
 var projectileX = playerX + ((playerWidth/2) - projectileWidth/2);
+var projectileX2 = projectileX + projectileWidth;
 var projectileY = playerY - 21;
 var rightPressed = false;
 var leftPressed = false;
@@ -31,14 +32,32 @@ var fPressed = false;
 var projectileActive = false;
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
+var enemyHeight = 50;
+var enemyY = canvasHeight - 590;
+var enemyWidth = 50;
+var enemyX = Math.floor(Math.random() * (canvasWidth - (enemyWidth * 2) + 1));
+var enemyX2 = enemyX + enemyWidth;
+var enemyActive = true;
 
+// push a proj in projectiles array on fPress
+// var proj {
+//     width: 12,
+//     height: 12,
+//     x: 0,
+//     y: 0,
+//     active: false
+// };
+// var projectiles = [];
+// var maxProjectiles = 3;
 
 
 setInterval(function() {
     clearPlayer();
     drawPlayer();
+    enemyHandler();
     playerMovement();
     fireProjectile();
+    projectileCollision();
     
 
 
@@ -86,7 +105,6 @@ function keyUpHandler(e) {
 function playerMovement() {
     if(rightPressed && (playerX + playerWidth) < canvasWidth) {
         playerX += 3;
-        console.log(playerX)
     }
     else if(leftPressed && playerX > 0) {
         playerX -= 3
@@ -105,21 +123,63 @@ function drawProjectile() {
 
 function moveProjectile() {
     projectileY -= 5;
-    console.log(projectileY, playerY);
+}
+function resetProjectilePosition() {
+    projectileY = playerY - 21;
+    projectileX = playerX + ((playerWidth/2) - projectileWidth/2);
+    projectileX2 = projectileX + projectileWidth;
 }
 
+// Set up array with mult projectiles. Dont reset ProjY every F press
 function fireProjectile() {
     if(fPressed) {
         projectileActive = true;
-        projectileY = playerY - 21;
-        projectileX = playerX + ((playerWidth/2) - projectileWidth/2);
+        resetProjectilePosition();
     }
     if(projectileActive){
         drawProjectile();
         moveProjectile();
         if(projectileY <= 0) {
             projectileActive = false;
-            console.log("asdfasdf")
         }
     }
+}
+
+// Enemy spawning functions
+
+function drawEnemy() {
+    ctx.beginPath();
+    ctx.rect(enemyX, enemyY, enemyWidth, enemyHeight);
+    ctx.fillStyle = "green";
+    ctx.fill();
+    ctx.closePath();
+}
+
+
+function enemyHandler() {
+    if(enemyActive){
+        drawEnemy();
+        enemyY++;
+    }
+    if(enemyY > (640 - enemyHeight)) {
+        enemyActive = false;
+    } 
+}
+
+// collision function
+function projectileCollision() {
+    if(projectileY < (enemyY + enemyHeight) && enemyX < projectileX && enemyX2 > projectileX2){
+        newEnemy();
+        
+
+    }
+}
+
+function newEnemy() {
+    enemyActive = true;
+    enemyY = canvasHeight - 590;
+    enemyX = Math.floor(Math.random() * (canvasWidth - (enemyWidth * 2) + 1));
+    enemyX2 = enemyX + enemyWidth;
+    enemyHandler();
+    console.log(enemyX, enemyX2);
 }
