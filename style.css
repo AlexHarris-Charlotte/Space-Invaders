@@ -7,3 +7,9 @@ canvas {
 .container {
     max-width: 100%;
 }
+
+p {
+    display:block;
+    margin: 0 auto;
+    font-size: 30px;
+}

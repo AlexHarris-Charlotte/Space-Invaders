@@ -38,7 +38,17 @@ var enemyWidth = 50;
 var enemyX = Math.floor(Math.random() * (canvasWidth - (enemyWidth * 2) + 1));
 var enemyX2 = enemyX + enemyWidth;
 var enemyActive = true;
-var score = 0;
+
+// push a proj in projectiles array on fPress
+// var proj {
+//     width: 12,
+//     height: 12,
+//     x: 0,
+//     y: 0,
+//     active: false
+// };
+// var projectiles = [];
+// var maxProjectiles = 3;
 
 
 setInterval(function() {
@@ -48,7 +58,6 @@ setInterval(function() {
     playerMovement();
     fireProjectile();
     projectileCollision();
-    
     
 
 
@@ -114,30 +123,26 @@ function drawProjectile() {
 
 function moveProjectile() {
     projectileY -= 5;
-    console.log("Y move");
 }
 function resetProjectilePosition() {
     projectileY = playerY - 21;
     projectileX = playerX + ((playerWidth/2) - projectileWidth/2);
     projectileX2 = projectileX + projectileWidth;
-    console.log("reset");
 }
 
-// ProjY is not incrementing
+// Set up array with mult projectiles. Dont reset ProjY every F press
 function fireProjectile() {
-    if(fPressed && projectileActive != true) {
+    if(fPressed) {
         projectileActive = true;
         resetProjectilePosition();
     }
     if(projectileActive){
         drawProjectile();
         moveProjectile();
-        console.log(projectileY);
         if(projectileY <= 0) {
-        projectileActive = false;
+            projectileActive = false;
         }
     }
-    
 }
 
 // Enemy spawning functions
@@ -165,9 +170,8 @@ function enemyHandler() {
 function projectileCollision() {
     if(projectileY < (enemyY + enemyHeight) && enemyX < projectileX && enemyX2 > projectileX2){
         newEnemy();
-        projectileActive = false;
-        score++;
-        document.getElementById("score").innerHTML = score;
+        
+
     }
 }
 
@@ -178,8 +182,4 @@ function newEnemy() {
     enemyX2 = enemyX + enemyWidth;
     enemyHandler();
     console.log(enemyX, enemyX2);
-}
-
-function scoreIncrement() {
-
 }
