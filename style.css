@@ -8,8 +8,21 @@ canvas {
     max-width: 100%;
 }
 
-p {
+h2 {
     display:block;
     margin: 0 auto;
     font-size: 30px;
 }
+
+#score-para {
+    position: absolute;
+    top: 50px;
+    left: 135px;
+}
+
+#lives-para {
+    position: absolute;
+    top: 80px;
+    left: 135px;
+}
+

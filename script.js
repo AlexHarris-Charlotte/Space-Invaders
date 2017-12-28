@@ -22,7 +22,7 @@ var playerCenter = playerX + (playerWidth/2);
 var playerY = canvasHeight - 60;
 var playerHeight = 40;
 var projectileHeight = 20;
-var projectileWidth = 10;
+var projectileWidth = 7;
 var projectileX = playerX + ((playerWidth/2) - projectileWidth/2);
 var projectileX2 = projectileX + projectileWidth;
 var projectileY = playerY - 21;
@@ -39,8 +39,11 @@ var enemyX = Math.floor(Math.random() * (canvasWidth - (enemyWidth * 2) + 1));
 var enemyX2 = enemyX + enemyWidth;
 var enemyActive = true;
 var score = 0;
+var lives = 3;
+document.getElementById("lives").innerHTML = lives
 
 
+alert("Press the Left and Right arrow keys to navigate. Press F to fire missles.");
 setInterval(function() {
     clearPlayer();
     drawPlayer();
@@ -48,11 +51,7 @@ setInterval(function() {
     playerMovement();
     fireProjectile();
     projectileCollision();
-    
-    
-
-
-
+    endGame();
 }, 10);
 
 
@@ -95,10 +94,22 @@ function keyUpHandler(e) {
 
 function playerMovement() {
     if(rightPressed && (playerX + playerWidth) < canvasWidth) {
-        playerX += 3;
+        if(score < 15) {
+            playerX += 3;
+        } else if(score >= 35) {
+            playerX += 7;
+        } else {
+            playerX += 5;
+        }
     }
-    else if(leftPressed && playerX > 0) {
-        playerX -= 3
+    if(leftPressed && playerX > 0) {
+        if(score < 15) {
+            playerX -= 3;
+        } else if(score >= 35) {
+            playerX -= 7;
+        } else {
+            playerX -= 5;
+        }
     }
 }
 
@@ -113,8 +124,13 @@ function drawProjectile() {
 }
 
 function moveProjectile() {
-    projectileY -= 5;
-    console.log("Y move");
+    if(score < 15) {
+        projectileY -= 5;
+    } else if(score >= 35) {
+        projectileY -= 7;
+    } else {
+        projectileY -= 9;
+    }
 }
 function resetProjectilePosition() {
     projectileY = playerY - 21;
@@ -132,7 +148,6 @@ function fireProjectile() {
     if(projectileActive){
         drawProjectile();
         moveProjectile();
-        console.log(projectileY);
         if(projectileY <= 0) {
         projectileActive = false;
         }
@@ -154,16 +169,25 @@ function drawEnemy() {
 function enemyHandler() {
     if(enemyActive){
         drawEnemy();
-        enemyY++;
+        if(score < 15) {
+            enemyY++;
+        } else if(score >= 35) {
+            enemyY += 3;
+        } else {
+            enemyY += 2;
+        }
     }
     if(enemyY > (640 - enemyHeight)) {
-        enemyActive = false;
+        enemyY = canvasHeight - 590;
+        enemyX = Math.floor(Math.random() * (canvasWidth - (enemyWidth * 2) + 1));
+        lives--;
+        document.getElementById("lives").innerHTML = lives
     } 
 }
 
 // collision function
 function projectileCollision() {
-    if(projectileY < (enemyY + enemyHeight) && enemyX < projectileX && enemyX2 > projectileX2){
+    if(projectileY < (enemyY + enemyHeight) && (enemyX - projectileWidth/2) < projectileX && (enemyX2 + projectileWidth/2) > projectileX2){
         newEnemy();
         projectileActive = false;
         score++;
@@ -180,6 +204,8 @@ function newEnemy() {
     console.log(enemyX, enemyX2);
 }
 
-function scoreIncrement() {
-
+function endGame() {
+    if(lives === 0) {
+        alert("Game Over! Refresh Page to play again.")
+    }
 }
